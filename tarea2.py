@@ -13,7 +13,7 @@ from datetime import datetime
 class Tarifa(object):
     def __init__(self,monto_normal=10.0,monto_especial=20.0):
 
-        assert(monto_normal>=0 and monto_especial>=0),"Las tasas por hora no pueden ser negativas."
+        assert(monto_normal>=0 and monto_especial>=0 and monto_normal!=monto_especial),"Las tasas por hora no pueden ser negativas o iguales."
         self.hs = float(monto_normal)
         self.hfs = float(monto_especial)
 
@@ -22,7 +22,7 @@ def calcularPrecio (tarifa, tiempoDeTrabajo):
     #Hacer precondiciones
     #calculo tiempo de trabajo en dias y horas
     diferencia = tiempoDeTrabajo[1] - tiempoDeTrabajo[0]
-    assert(diferencia.days <= 7 and (not (diferencia.days==0) or diferencia.seconds>=900)),"El tiempo trabajado debe ser mayor a 15min y menor que 7 dias."
+    assert(diferencia.days>=0 and diferencia.days <= 7 and (not (diferencia.days==0) or diferencia.seconds>=900)),"El tiempo trabajado total trabajado debe ser positivo,mayor a 15min y menor que 7 dias."
     ndia = calendar.weekday(tiempoDeTrabajo[0].year, tiempoDeTrabajo[0].month, tiempoDeTrabajo[0].day)
     dia_i = tiempoDeTrabajo[0].day
     dia_f = tiempoDeTrabajo[1].day
@@ -66,7 +66,7 @@ def calcularPrecio (tarifa, tiempoDeTrabajo):
     return pago
 
 #############################################################################
-tiempoDeTrabajo = [datetime(2016, 4, 22, 23, 45, 0), datetime(2016, 4, 23, 23, 45, 0)]
-precios = Tarifa(-10.56874, 20.484)
+tiempoDeTrabajo = [datetime(2016, 4, 22, 23, 0, 0), datetime(2016, 4, 26, 0, 10, 0)]
+precios = Tarifa(1, 2)
 pago = calcularPrecio(precios,tiempoDeTrabajo)
 print("Pago: ",pago,"bs")
